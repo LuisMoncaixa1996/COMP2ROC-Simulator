@@ -1,7 +1,8 @@
 ## add sub menu items in shinydashboard sidebar
 
 # load the required packages
-
+require(devtools)
+install_version("ROCR", version = "1.0-7", repos = "http://cran.us.r-project.org")
 library(shiny)
 library(shinydashboard)
 library(DT)
