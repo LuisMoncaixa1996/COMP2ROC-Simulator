@@ -1,0 +1,18 @@
+
+#### COMP2ROC
+
+
+**COMP2ROC** é um package que permite comparar duas curvas ROC que se intercetam, mediante várias metodologias de comparação, permitindo a análise dos dois sistemas individualmente e a sua comparação. Este package compara os sistemas consoante a estrutura de dependência/independência dos datasets a analisar [1]. 
+Este package é muito objetivo uma vez que, para além que representar as curvas consoante o dataset recebido, permite a obtenção de vários parâmetros estatísticos como o valor da AUC, intervalos de confiança e desvios-padrão para facilitar análise entre testes [2].
+
+
+#### COMP2ROC Simulator
+
+**COMP2ROC Simulator** permite ao utilizador comparar duas curvas ROC de forma intuitiva e rápida, descrevendo os vários parâmetros e valores estatísticos, bem como representações gráficas das curvas utilizadas, auxiliando o utilizador a uma análise completa e rigorosa dos seus dados.
+
+
+#### References
+1. Braga, A.C., Frade, H., Carvalho, S., and Santiago, A. Comp2ROC: Compare Two ROC Curves that Intersect. R package version 1.1.4. (2016). https://CRAN.R/project.org/package=Comp2ROC
+2. Braga, A.C., Costa, L., and Oliveira, P.: An alternative method for global and partial comparison of two diagnostic systems based on ROC curves. Journal of Statistical Computation and Simulation, 83(2), 307-325 (2013).
+3.	Quintas J.P., Machado e Costa F., Braga A.C. (2020) ROSY Application for Selecting R Packages that Perform ROC Analysis. In: Gervasi O. et al. (eds) Computational Science and Its Applications – ICCSA 2020. ICCSA 2020. Lecture Notes in Computer Science, vol 12251. Springer, Cham. https://doi.org/10.1007/978-3-030-58808-3_16
+

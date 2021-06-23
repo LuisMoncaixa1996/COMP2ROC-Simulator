@@ -1,0 +1,19 @@
+Aplicação para comparação de curvas ROC entre diferentes variáveis.
+
+
+**Upload Dataset**
+
+Nesta secção descarregue o dataset que deseja utilizar de forma a obter as suas curvas ROC e comparar as mesmas, selecionando também a relação entre as váriaveis preditoras (**dependentes** ou **independentes**), o seu dataset deverá estar no formato *csv*, após efetuado o *Upload*, siga para a seguinte secção dependendo da relação entre as suas variáveis preditoras.
+
+**Comparação de curvas para variáveis Dependentes/Independentes**
+
+Esta secção encontra-se dividia em 3 etapas:
+ - Em **Escolher Variáveis** são definidas as variáveis preditoras ao qual deseja efetuar a comparação entre as suas curvas.
+ - Em **Resultados Gráficos** estão representadas as *curvas ROC* correspondentes, as *Àreas abaixo da curva*, poderá efetuar o download dos gráficos, guardando-os no seu computador.
+ - Em **Resultados Estatísticos** são apresentados todos os dados estatisticos relativos á comparação das curvas permitindo uma melhor análise por parte do operador.
+ 
+**Sobre**
+
+Alguma informação relevante sobre a aplicação e alguns conceitos teóricos, bem como alguma bibliografia disponível para leitura.
+
+
