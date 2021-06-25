@@ -2,13 +2,15 @@
 
 # load the required packages
 require(devtools)
-install_version("ROCR", version = "1.0-7", repos = "http://cran.us.r-project.org")
+install_version("ROCR", version = "1.0-7", repos = "http://cran.us.r-project.org", upgrade = 'never')
 library(shiny)
 library(shinydashboard)
 library(DT)
 library(Comp2ROC)
 library(plotly)
 library(shinyWidgets)
+library(dplyr)
+library(shinycssloaders)
 
 #Fun??o do COMP2ROC para apresentar representa??es gr?ficas das curvas ROC emp?ricas e ?reas abaixo da curva
 roc.curves.boot_v2 <-
@@ -336,7 +338,7 @@ ui <- shinyUI(
         dashboardHeader(title = "COMP2ROC Simulator", titleWidth = 300,tags$li(class = "dropdown",
                                                                      dropMenu(
                                                                          dropdownButton("Info", circle = TRUE, status = 'primary', icon = icon('info'),size = "sm", up = FALSE),
-                                                                         h3(strong('Informacao')),
+                                                                         h3(strong('Information')),
                                                                          br(),
                                                                          h5(div(includeMarkdown("Info.Rmd"), 
                                                                                 align="justify")),
@@ -349,32 +351,32 @@ ui <- shinyUI(
                         menuItem("Upload Dataset", tabName = "Upload", icon = icon("upload")),
                         
                         # Menus de compara??o entre curvas dependendo do tipo de vari?vel
-                        menuItem("Comparacao de curvas ROC - Dependentes",
+                        menuItem("Comparison of ROC curves - Dependents",
                                  icon = icon("clipboard"),
-                                 menuSubItem("Escolher Variaveis",
+                                 menuSubItem("Choose Predictions",
                                              tabName = "Escolher_Variaveis",
                                              icon = icon("edit")),
-                                 menuSubItem("Resultados Graficos",
+                                 menuSubItem("Graphic Results",
                                              tabName = "Resultados_Graficos",
                                              icon = icon("chart-area")),
-                                 menuSubItem("Resultados Estatisticos",
+                                 menuSubItem("Statistical Results",
                                              tabName = "Resultados_Estatisticos",
                                              icon = icon("list-ol"))),
                                              
-                        menuItem("Comparacao de curvas ROC - Independentes",
+                        menuItem("Comparison of ROC curves - Independents",
                                  icon = icon("clipboard"),
-                                 menuSubItem("Escolher Variaveis",
+                                 menuSubItem("Choose Predictions",
                                              tabName = "Escolher_Variaveis_Ind",
                                              icon = icon("edit")),
-                                 menuSubItem("Resultados Graficos",
+                                 menuSubItem("Graphic Results",
                                              tabName = "Resultados_Graficos_Ind",
                                              icon = icon("chart-area")),
-                                 menuSubItem("Resultados Estatisticos",
+                                 menuSubItem("Statistical Results",
                                              tabName = "Resultados_Estatisticos_Ind",
                                              icon = icon("list-ol"))),
                         
                         #Menu informativo com refer?ncias acerca da aplica??o
-                        menuItem("Sobre", tabName = "Sobre", icon = icon("book"))
+                        menuItem("About", tabName = "Sobre", icon = icon("book"))
                         )),
         
         
@@ -402,7 +404,7 @@ ui <- shinyUI(
                         radioButtons("disp","Display",choices = c(Head = "head",
                                                                   ALL = "all",
                                                                   selected = "head")),
-                        checkboxGroupInput("Dependency", "Type of variables:", c("Dependentes", "Independentes")),
+                        
                         actionButton("submitbutton", "Submit", class = "btn btn-primary")
                     ),
                     
@@ -411,39 +413,39 @@ ui <- shinyUI(
                     )
                 )),
                 #Interface do segundo menu (Dependentes) -> Escolha das vari?veis
-                tabItem("Escolher_Variaveis", h4("Escolha as variaveis de interesse"), sidebarLayout(
+                tabItem("Escolher_Variaveis", h4("Choose your dependent predictions"), sidebarLayout(
                     sidebarPanel(
-                        textInput("DPred1", "Prediction 1",""),
+                        selectInput("DPred1","Prediction 1",""),
                         checkboxInput("Direction1", "Direction1", value = T),
-                        textInput("DPred2", "Prediction 2",""),
+                        selectInput("DPred2","Prediction 2",""),
                         checkboxInput("Direction2", "Direction2", value = T),
-                        textInput("DResult", "Result", ""),
+                        selectInput("DResult","Result",""),
                         actionButton("Dsubmitbutton", "Submit", class = "btn btn-primary")),
                     mainPanel(
                         DT::dataTableOutput("Dependentes"), style = "height:800px;overflow-x: scroll;"
                         
                     ))),
                 #Interface do segundo menu (Dependentes) -> Resultados Gr?ficos
-                tabItem('Resultados_Graficos',  
-                        plotOutput("plotOut"), downloadButton("Download_Plot", label = "Download"), plotOutput("plotOut2"),downloadButton("Download_Plot_2", label = "Download")),
+                tabItem('Resultados_Graficos',
+                        plotOutput("plotOut")%>% withSpinner(color="#0dc5c1"), downloadButton("Download_Plot", label = "Download"), plotOutput("plotOut2")%>% withSpinner(color="#0dc5c1"),downloadButton("Download_Plot_2", label = "Download")),
                 
                 #Interface do segundo menu (Dependentes) -> Resultados Estat?sticos
                 tabItem('Resultados_Estatisticos', sidebarLayout(
                     sidebarPanel(
                         checkboxGroupInput("Resultados", "Show Results:",c("Prediction 1","Prediction 2","Statistical Overall"), selected =c("Prediction 1","Prediction 2","Statistical Overall"))),
                     mainPanel(
-                        tags$label(h2("Resultados Estatisticos")),
+                        tags$label(h2("Statistical Results")),
                         verbatimTextOutput("OutputDependentes"),
                         
                     ))),
                 #Interface do terceiro menu (Independentes) -> Escolha das vari?veis
-                tabItem("Escolher_Variaveis_Ind", h4("Escolha as variaveis de interesse"),sidebarLayout(
+                tabItem("Escolher_Variaveis_Ind", h4("Choose your independent predictions"),sidebarLayout(
                     sidebarPanel(
-                        textInput("IPred1", "Prediction 1",""),
-                        textInput("IResult1", "Result 1"),
+                        selectInput("IPred1","Prediction 1",""),
+                        selectInput("IResult1","Result 1",""),
                         checkboxInput("Direction_1", "Direction_1", value = T),
-                        textInput("IPred2", "Prediction 2",""),
-                        textInput("IResult2", "Result 2",""),
+                        selectInput("IPred2","Prediction 2",""),
+                        selectInput("IResult2","Result 2",""),
                         checkboxInput("Direction_2", "Direction_2", value = T),
                         actionButton("Isubmitbutton", "Submit", class = "btn btn-primary")),
                     mainPanel(
@@ -451,19 +453,19 @@ ui <- shinyUI(
                     ))),
                 #Interface do terceiro menu (Independentes) -> Resultados Gr?ficos
                     tabItem('Resultados_Graficos_Ind', 
-                            plotOutput("IplotOut"), downloadButton("IDownload_Plot", label = "Download"), plotOutput("IplotOut2"),downloadButton("IDownload_Plot_2", label = "Download")),
+                            plotOutput("IplotOut") %>% withSpinner(color="#0dc5c1"), downloadButton("IDownload_Plot", label = "Download"), plotOutput("IplotOut2") %>% withSpinner(color="#0dc5c1"),downloadButton("IDownload_Plot_2", label = "Download")),
                 
                 #Interface do terceiro menu (Independentes) -> Resultados Estat?sticos 
                     tabItem('Resultados_Estatisticos_Ind', sidebarLayout(
                         sidebarPanel(
                             checkboxGroupInput("IResultados", "Show Results:",c("Prediction 1","Prediction 2","Statistical Overall"), selected =c("Prediction 1","Prediction 2","Statistical Overall"))),
                         mainPanel(
-                            tags$label(h2("Resultados Estatisticos")),
+                            tags$label(h2("Statistical Results")),
                             verbatimTextOutput("OutputIndependentes"),
                             ))),
                 
                 #Menu informativo
-                    tabItem("Sobre",titlePanel("Sobre"),
+                    tabItem("Sobre",titlePanel("About"),
                             br(),
                             div(includeMarkdown("About.Rmd"), 
                                 align="justify")
@@ -474,7 +476,7 @@ ui <- shinyUI(
         )
     )
 )
-server <- function(input, output) {
+server <- function(input, output, session) {
     
     #Tabela resultante do dataset importado pelo utilizador
     output$contents <- renderDataTable({
@@ -483,20 +485,63 @@ server <- function(input, output) {
             df <- read.csv(input$file1$datapath,header = input$header, sep = input$sep,
                            quote = input$quote)
             if(input$disp == "head"){
+                observeEvent(df, {
+                    updateSelectInput(session, "DPred1", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IPred1", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "DPred2", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IPred2", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "DResult", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IResult1", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IResult2", choices = colnames(df))
+                })
                 return(head(df))
+                
             }
             else{
+                observeEvent(df, {
+                    updateSelectInput(session, "DPred1", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IPred1", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "DPred2", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IPred2", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "DResult", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IResult1", choices = colnames(df))
+                })
+                observeEvent(df, {
+                    updateSelectInput(session, "IResult2", choices = colnames(df))
+                })
                 return(df)
             }
             isolate(datasetInput())
         }
     })
-    
     #Dataset gerado apenas com as colunas selecionadas pelo utilizador
     output$Dependentes <- renderDataTable({
         req(input$file1)
         df <- read.csv(input$file1$datapath,header = input$header, sep = input$sep,
                                quote = input$quote)
+      
         if (input$Dsubmitbutton > 0) {
                 depen <- df[,c(input$DPred1, input$DPred2, input$DResult)]
                 return(depen)
